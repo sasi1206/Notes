@@ -1,7 +1,6 @@
 What is MCP?
 
-MCP is standardized way for AI and LLMs to communicate with external tools. Take it as an USB-C port, we
-can connect it to external devices and use them as we want.It was introduced by Anthropic in November 2024.
+Think of MCP as the USB-C of AI. It’s a standardized interface that lets any supported LLM interact with external tools, data sources, or APIs. Like a universal port. You build an MCP server once, and any client that supports MCP can use it.It was introduced by Anthropic in November 2024.
 
 Why MCP?
 
@@ -10,6 +9,8 @@ Large Language Models (LLMs)—like ChatGPT or Claude—are great, but on their 
 To fix that, engineers introduced tools—special plugins that let LLMs access external information. Like the weather. Or a calendar. Or your inbox (with your permission, of course). But these tools come with a huge limitation: they’re bound to the specific client or interface you’re using.
 
 So ChatGPT has its set. Claude has another. There’s no plug-and-play. Just silos.
+
+    MCP comes in clutch 
 
 MCP Structure
 

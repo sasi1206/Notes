@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Webhook is a way to communicate with applications automatically when a event happens
 
 It's essentially a event driven http request sender they act as a callback mechanism.
@@ -20,3 +21,27 @@ bait it shows you and you catch the fish
 
 
 Like this we create a hook to another application and when a specified event happens it sends a http request
+=======
+Webhook is a way to communicate with applications automatically when a event happens
+
+It's essentially a event driven http request sender they act as a callback mechanism.
+it usually include a payload (data) in their request
+
+For example,
+
+Payment providers,
+
+We( in our app ) creates a order and send it to payment providers and we( in our server ) will have 
+a API endpoint which listens to payment changes and we gives this endpoint to payment providers and creates 
+a webhook by saying "whenever state of payment changes" send a request to this endpoint
+
+This is webhook.
+ 
+Why it's called "webhook"
+
+Take it as this, your fishing and ur fishing rod will have a hook. Why? So that whenever a fish takes 
+bait it shows you and you catch the fish
+
+
+Like this we create a hook to another application and when a specified event happens it sends a http request
+>>>>>>> 022d001671169eb3ade8e93e09d0566c605fcbe6

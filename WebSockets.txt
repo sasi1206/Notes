@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 WebSockets is full-duplex communication protocol where client,server can send,receive msgs at the same time
 it sends to request to server to establish a connection once it connected we can send,receive msgs easily
 
 keeping in mind that WebSockets is used to send and receive msgs from client to server so we can't create a chat application fully.
 
 take it as calling someone we call them and if they we can talk and it stops if any one of connection ends.
+=======
+WebSockets is full-duplex communication protocol where client,server can send,receive msgs at the same time
+it sends to request to server to establish a connection once it connected we can send,receive msgs easily
+
+keeping in mind that WebSockets is used to send and receive msgs from client to server so we can't create a chat application fully.
+
+take it as calling someone we call them and if they we can talk and it stops if any one of connection ends.
+>>>>>>> 022d001671169eb3ade8e93e09d0566c605fcbe6
