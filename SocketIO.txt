@@ -1,0 +1,18 @@
+Socket IO is library thats built on webSockets but has many extra features like broadcasting , groups , fallback
+pooling, auto re-connection. and all
+
+It's also event driven means we can emit custom event from client/server and catch in on client/server.
+
+Additionally we can also create groups.
+
+io.emit() - Send to all sockets
+socket.emit() - Send to connected socket
+socket.broadcast - Send to all sockets but expect connected socket.
+io.to(room).emit() - Send to specific room and all connected members
+socket.broadcast.to(grp).emit - Send to specific room but expect connected socket
+
+socket.on - catch emitted function.
+socket.on(event,listener);
+
+socket.leave(room) - leaves room
+socket.join(room) - join a room

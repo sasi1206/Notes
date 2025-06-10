@@ -1,0 +1,50 @@
+What is docker?
+
+Docker is a container based file sharing system. whole project is convert into a single file called docker 
+image,then its executed in docker container. in other words we don't have install necessary applications
+instead we can run it without installing them which saves time and unnecessary problems.we can host these 
+files either publicly or privately. to publicly we can use docker hub.
+
+Docker Image:
+
+    The whole project, config, packages are put in a single file. this file is read only. it has layers.
+    basic layer is os and top layer is application. 
+    When installing two versions of a image and in newer versions, the files of older versions is occurs, 
+    it skips these files and only installs newer ones
+
+Docker Container:
+    Its runtime environment for docker image.it executes the image file.
+
+Example:
+
+    Node.js - this a image file
+
+    docker pull nodejs -version - this pulls nodejs image from public hub to our local.
+    after it finishes installing the docker container runs the image.
+
+    nodejs 9.10 running
+
+Difference between VM And Docker:
+
+Both are virtualization tools but the thing is what they virtual. VM virtual OS And Applications 
+but docker only virtual Applications. docker images are smaller sizes but in the other hand it can 
+only run hosts docker image. example, can't run linux docker image in windows pc.
+
+Difference between image and container
+
+container is a running environment for image
+
+virtual file system
+port bonded: talk to application running inside or container
+application image: redis,mongo
+
+
+commends:
+
+docker pull 'image name' - pull image from docker hub
+docker run:version 'image name' - run image in a container environment or pull image then starts container
+docker run -d 'image name' - run image in detach mode
+docker ps - shows all running containers
+docker stop 'container id' - stops the container
+docker start 'container id' - starts STOPPED container
+docker ps -a - shows running and stopped containers
