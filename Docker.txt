@@ -1,0 +1,115 @@
+What is docker?
+
+Docker is a container based file sharing system. whole project is convert into a single file called docker 
+image,then its executed in docker container. in other words we don't have install necessary applications
+instead we can run it without installing them which saves time and unnecessary problems.we can host these 
+files either publicly or privately. to publicly we can use docker hub.
+
+Docker Image:
+
+    The whole project, config, packages are put in a single file. this file is read only. it has layers.
+    basic layer is os and top layer is application. 
+    When installing two versions of a image and in newer versions, the files of older versions is occurs, 
+    it skips these files and only installs newer ones
+
+Docker Container:
+    Its runtime environment for docker image.it executes the image file.
+
+Example:
+
+    Node.js - this a image file
+
+    docker pull nodejs -version - this pulls nodejs image from public hub to our local.
+    after it finishes installing the docker container runs the image.
+
+    nodejs 9.10 running
+
+Difference between VM And Docker:
+
+Both are virtualization tools but the thing is what they virtual. VM virtual OS And Applications 
+but docker only virtual Applications. docker images are smaller sizes but in the other hand it can 
+only run hosts docker image. example, can't run linux docker image in windows pc.
+
+Difference between image and container
+
+container is a running environment for image
+
+virtual file system
+port bonded: talk to application running inside or container
+application image: redis,mongo
+
+
+commends:
+
+docker pull 'image name' - pull image from docker hub
+docker run:version 'image name' - run image in a container environment or pull image then starts container
+docker run -d 'image name' - run image in detach mode
+docker ps - shows all running containers
+docker stop 'container id' - stops the container
+docker start 'container id' - starts STOPPED container
+docker ps -a - shows running and stopped containers
+
+ports:
+    every container has its own port to communicate to. we can use same ports to two containers 
+    but we can't use two same host ports to different containers
+
+difference between container port vs host port
+ multiple containers can run on your host machine
+ your host machine only has certain ports available
+ conflict happens when TWO SAME HOST PORT on host machine
+ example:
+
+port 5000 port 3000 port 3001
+   |          |         |
+   V          V         V
+port 5000  port 3000 port 3000
+
+the above one are host and below are container ports
+that works fine because we can have two same container port on two different host port 
+but we cant have two same host port on two same(or)different container port
+
+we should establish a port bound between host and container.
+how? by using this,
+docker run -p[host-port]:[container-port(default (or) ours )] [image name]:[version]
+
+Docker names
+defaults it creates a name but we can choose our own name by using the following commend,
+docker run -d -p[host-port]:[container port] --name [container-name] [image]:[version]
+
+
+docker logs:
+    docker logs used to see logs of specific containers we can see the logs by either 
+    using container id or container name, the comment is,
+
+    docker logs [container id(or)name]
+
+docker exec:
+    docker exec is used to have own terminal of that specific container. we can do a lot of stuff 
+    with that.we can do that by this commend,
+
+    docker exec -it [container id(or)name] /bin/bash(dictatory)
+    to exit use 'exit'
+
+docker network:
+    it is a isolated network where containers are running. containers can talk to each just by using 
+    name(mongo,mongo-express) but in order to connect with host applications we need to use that 
+    specific containers port and when we are gonna add our host application to docker network the 
+    browser will communicate using ports.
+    
+    there is commend to see all network is,
+    docker network
+
+    additionally, we can create our own network,
+    docker network create [network-name]
+
+    docker run -d -p[ports] --name[name] --net [network-name] [image]
+    
+    if in case the commend is longer you can wrap it by,
+
+    docker run -d \
+    -p \
+    to set env variables,
+    -e [variable-name]=[variable-value] \
+    --name \
+    --net \
+    [image]

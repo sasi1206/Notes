@@ -1,0 +1,23 @@
+Web3 in third generation of websites. its built on block chain technologies mainly made for decentralization,
+permission less websites.
+
+before that what is centralization?
+
+Centralized systems are those where control, authority, and decision-making are concentrated in a single entity or location.
+This means that one organization, government, or individual has the power to regulate and manage operations, rather than distributing
+control among multiple independent participants.
+
+it means one entity will control what user see , how user should behave , having control over user like in instagram, it has a privacy 
+policy,and user can only post story/post that goes with policy if not they can remove it. and it has a reels where it shows content to
+user uniquely and all
+
+web3 uses block chain too.
+so what is blockchain?
+
+its a network where data's are stored as block and once it written we can't change or delete it. Every person in blockchain can see the 
+blocks and everyone have their own copy. so if in case a person changes something on their computer. we can verify it by comparing others.
+we can't hack blocks cause every blocks are chain each other.
+
+web1 - only read.
+web2 - read,write
+web3 - read,write,own,participate
