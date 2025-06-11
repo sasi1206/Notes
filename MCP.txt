@@ -10,15 +10,199 @@ To fix that, engineers introduced tools—special plugins that let LLMs access e
 
 So ChatGPT has its set. Claude has another. There’s no plug-and-play. Just silos.
 
-    MCP comes in clutch 
+To clear up this mess MCP comes in clutch with,
+
+Fewer one-off tools
+    With MCP, we can stop reinventing the wheel for every single integration.
+Faster experimentation
+    Pull down an MCP server from GitHub and start playing. No need to build everything yourself.
+Scalable infrastructure
+    Standardization means your tools and workflows can scale with way less friction.
+Actual collaboration
+    This helps democratize AI integrations. Less gate keeping. More innovation.
 
 MCP Structure
 
 At its core, MCP follows a client-server architecture where a host application can connect to multiple 
 servers:
 
-MCP Hosts: Programs like Claude Desktop, IDEs, or AI tools that want to access data through MCP
-MCP Clients: Protocol clients that maintain 1:1 connections with servers
-MCP Servers: Lightweight programs that each expose specific capabilities through the standardized Model Context Protocol
-Local Data Sources: Your computer’s files, databases, and services that MCP servers can securely access
-Remote Services: External systems available over the internet (e.g., through APIs) that MCP servers can connect to
+The MCP Host is the LLM (like Claude, ChatGPT, Gemini, etc).
+The MCP Client is part of the host application, maintaining a connection with an MCP server.
+The MCP Server is where the action happens—it provides the tools, context, and prompts.
+The LLM picks up what it needs, when it needs it, and runs with it.
+
+Lets take GitHub's MCP Server as example,
+
+Without MCP Server, we'll ask GitHub Copilot whats commend line for git commit it'll say git commit -m [your message] but if we ask it to execute it. It can't why? because Copilot wasn't trained to do these things instead it's trained to do help ppl but not automation and also lack of external tools usability.
+
+But with MCP Server, we can able to achieve. Not only we can say commit this to a repo we can, "Hey create a repo and push all these files in this folder and init local repo to this folder".
+
+The result?
+It creates repo, copies files,push into repo and init it to local. All using a single prompt.
+
+Interesting right? but how does MCP Server actually works?
+
+MCP Server has tools,resources and prompts.resources are file-like data that can be read by clients,
+Tools are a specific functions that can be called by LLMs and finally, prompts are pre-written templates that help users accomplish specific tasks
+
+A MCP server can be in local,remote or ur database. Local MCP Server can access your file system and we can create tools using those. Remote MCP Server is connecting with internet like GitHub API, Notion API etc., we can create different tools and automate our process.
+
+So how to build your own MCP Server?
+ 
+Model Context Protocol has their sdk for different Languages in GitHub and they have an package too.
+
+I'm using TypeScript to create a weather forecast MCP Server,
+
+Step1: Install latest version of Node.js
+Step2: Create a folder and init npm in it.
+Step3: Instal @modelcontextprotocol/sdk and zod
+Step4: Update your package.json as,
+
+    {
+    "type": "module",
+    "bin": {
+        "weather": "PATH//TO//INDEX FILE"
+    },
+    "scripts": {
+        "build": "tsc && chmod 755 build/index.js"
+    },
+    "files": ["build"]
+    }
+
+Step5: Create a tsconfig.json file,
+
+    {
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "Node16",
+        "moduleResolution": "Node16",
+        "outDir": "./build",
+        "rootDir": "./src",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+    }
+
+Step6:Create MCP Server
+
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+const NWS_API_BASE = "https://api.weather.gov";
+const USER_AGENT = "weather-app/1.0";
+
+// Create server instance
+const server = new McpServer({
+  name: "weather",
+  version: "1.0.0",
+  capabilities: {
+    resources: {},
+    tools: {},
+  },
+});
+
+Step7: Registering a tool,
+
+// Register weather tools
+server.tool(
+  "get-alerts",
+  "Get weather alerts for a state",
+  {
+    state: z.string().length(2).describe("Two-letter state code (e.g. CA, NY)"),
+  },
+  async ({ state }) => {
+    const stateCode = state.toUpperCase();
+    const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
+    const alertsData = await makeNWSRequest<AlertsResponse>(alertsUrl);
+
+    if (!alertsData) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve alerts data",
+          },
+        ],
+      };
+    }
+
+    const features = alertsData.features || [];
+    if (features.length === 0) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `No active alerts for ${stateCode}`,
+          },
+        ],
+      };
+    }
+
+    const formattedAlerts = features.map(formatAlert);
+    const alertsText = `Active alerts for ${stateCode}:\n\n${formattedAlerts.join("\n")}`;
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: alertsText,
+        },
+      ],
+    };
+  },
+);
+
+Step8: Running Server,
+
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("Weather MCP Server running on stdio");
+}
+
+main().catch((error) => {
+  console.error("Fatal error in main():", error);
+  process.exit(1);
+});
+
+Now we have create our OWN MCP Server. but how do we connect this to LLMs?
+
+I'm using Claude For Desktop to run this MCP you can use other MCP Clients as well;
+
+Open Claude for Desktop > Click on settings > Config > MCP and add this,
+{
+  "mcpServers": {
+    "weather": {
+      "command": "node",
+      "args": ["C:\\PATH\\TO\\PARENT\\FOLDER\\weather\\build\\index.js"]
+    }
+  }
+}
+
+Hooray! we have connected your MCP to Claude. Now go to chat there you see a settings icon when you click it should show your tools and That’s it. ask claude about weather and it use your MCP Server to get forecast.
+
+But what if you want to host it? like anyone can use it?Two ways. first one is,
+using GitHub. publish your MCP Server to GitHub and ppl can clone it and run in their machines. another one is smithery, A Place where you can explore MCP Server and host it. They provide multiple Security protocols for your MCP Server.
+
+People out there already creating crazy stuffs with MCP. Check out this Repo which has collective of Interesting MCP Servers.
+
+GitHub Repo:  https://github.com/punkpeye/awesome-mcp-servers
+
+and these websites too,
+
+Smithery: https://smithery.ai/,
+Glama: https://glama.ai/mcp/servers
+
+
+AI just reached its next generation with MCP. Now we can not only use them to get info but we can automate our life wit it. MCP is still new technology so docs are messy but there are youtube tutorials. Now we can automate our life with MCP Server seamlessly.
+
+Lets see who create Jarvis first 😂.
+
+The fact that we came this close to AI is scary at the same time its Interesting.
+
+Things are going to change in a blink of eye. Whats your thought on this new generation of AI? Comment down below 👇
